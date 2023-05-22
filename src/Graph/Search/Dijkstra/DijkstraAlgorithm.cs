@@ -7,13 +7,16 @@ namespace FreeTeam.Graph.Search
         #region Private
         private readonly Graph<T> _graph;
 
-        private List<GraphVertexInfo<T>> _infos;
+        private LinkedList<GraphVertexInfo<T>> _infos;
         #endregion
 
         public DijkstraAlgorithm(Graph<T> graph) =>
             _graph = graph;
 
         #region Public methods
+        public string FindShortestPath(T startValue, T finishValue) =>
+            FindShortestPath(_graph.Find(startValue), _graph.Find(finishValue));
+
         public string FindShortestPath(Vertex<T> startNode, Vertex<T> finishNode)
         {
             InitInfo();
@@ -32,9 +35,6 @@ namespace FreeTeam.Graph.Search
 
             return GetPath(startNode, finishNode);
         }
-
-        public string FindShortestPath(T startValue, T finishValue) =>
-            FindShortestPath(_graph.Find(startValue), _graph.Find(finishValue));
 
         public GraphVertexInfo<T> FindUnvisitedNodeWithMinSum()
         {
@@ -56,10 +56,10 @@ namespace FreeTeam.Graph.Search
         #region Private methods
         private void InitInfo()
         {
-            _infos = new List<GraphVertexInfo<T>>();
+            _infos = new LinkedList<GraphVertexInfo<T>>();
             foreach (var v in _graph.Vertices)
             {
-                _infos.Add(new GraphVertexInfo<T>(v));
+                _infos.AddLast(new GraphVertexInfo<T>(v));
             }
         }
 
@@ -91,11 +91,11 @@ namespace FreeTeam.Graph.Search
 
         private string GetPath(Vertex<T> startNode, Vertex<T> endNode)
         {
-            var path = endNode.ToString();
+            var path = endNode.Value.ToString();
             while (startNode != endNode)
             {
                 endNode = GetNodeInfo(endNode).PreviousNode;
-                path = endNode.ToString() + " " + path;
+                path = endNode.Value.ToString() + " -> " + path;
             }
 
             return path;

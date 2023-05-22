@@ -1,6 +1,4 @@
-﻿using FreeTeam.Graph;
-
-namespace FreeTeam.Graph.Search
+﻿namespace FreeTeam.Graph.Search
 {
     public class GraphVertexInfo<V>
     {
