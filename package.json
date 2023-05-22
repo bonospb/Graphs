@@ -1,0 +1,19 @@
+{
+  "name": "ru.freeteam.graphs",
+  "author": "Pavel Nik",
+  "displayName": "Graphs",
+  "description": "Graphs - небольшая библиотека для работы с графами.",
+  "unity": "2020.3",
+  "version": "1.0.0",
+  "keywords": [
+    "graphs",
+    "graph",
+    "dijkstra",
+    "DFS",
+	"BFS"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bonospb/Graphs.git"
+  }
+}
