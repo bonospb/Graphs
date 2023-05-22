@@ -5,13 +5,13 @@ namespace FreeTeam.Graph
 {
     public class Graph<T>
     {
-        #region Private
-        private readonly List<Vertex<T>> vertices = new();
-        #endregion
-
         #region Public
         public int Count => vertices.Count;
         public IList<Vertex<T>> Vertices => vertices.AsReadOnly();
+        #endregion
+
+        #region Private
+        private readonly List<Vertex<T>> vertices = new();
         #endregion
 
         #region Public methods        
