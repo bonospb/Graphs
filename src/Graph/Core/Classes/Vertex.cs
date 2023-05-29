@@ -44,16 +44,20 @@ namespace FreeTeam.Graph
 
         public override string ToString()
         {
-            StringBuilder nodeString = new();
-            nodeString.Append("Vertex: ");
-            nodeString.Append(_value);
-            nodeString.Append(" | With Edges [");
+            StringBuilder vertexString = new();
+            vertexString.Append("Vertex: ");
+            vertexString.Append(_value);
+            vertexString.Append(" | With Edges [");
 
             for (int i = 0; i < _edges.Count; i++)
-                nodeString.Append(_edges[i].ConnectedNode.Value + ", ");
+            {
+                vertexString.Append(_edges[i]);
+                if (i < _edges.Count - 1)
+                    vertexString.Append(", ");
+            }
 
-            nodeString.Append("]");
-            return nodeString.ToString();
+            vertexString.Append("]");
+            return vertexString.ToString();
         }
         #endregion
     }

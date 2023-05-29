@@ -33,7 +33,7 @@ namespace FreeTeam.Graph.Search
                 SetSumToNextNode(current);
             }
 
-            return GetPath(startNode, finishNode);
+            return string.Join(" -> ", GetPath(startNode, finishNode));
         }
 
         public GraphVertexInfo<T> FindUnvisitedNodeWithMinSum()
@@ -65,10 +65,10 @@ namespace FreeTeam.Graph.Search
 
         private GraphVertexInfo<T> GetNodeInfo(Vertex<T> v)
         {
-            foreach (var i in _infos)
+            foreach (var info in _infos)
             {
-                if (i.Vertex.Equals(v))
-                    return i;
+                if (info.Vertex.Equals(v))
+                    return info;
             }
 
             return null;
@@ -80,7 +80,7 @@ namespace FreeTeam.Graph.Search
             foreach (var e in info.Vertex.Edges)
             {
                 var nextInfo = GetNodeInfo(e.ConnectedNode);
-                var sum = info.EdgesWeightSum + e.EdgeWeight;
+                var sum = info.EdgesWeightSum + e.Weight;
                 if (sum < nextInfo.EdgesWeightSum)
                 {
                     nextInfo.EdgesWeightSum = sum;
@@ -89,13 +89,14 @@ namespace FreeTeam.Graph.Search
             }
         }
 
-        private string GetPath(Vertex<T> startNode, Vertex<T> endNode)
+        private IEnumerable<T> GetPath(Vertex<T> startNode, Vertex<T> endNode)
         {
-            var path = endNode.Value.ToString();
+            var path = new LinkedList<T>();
+            path.AddFirst(endNode.Value);
             while (startNode != endNode)
             {
                 endNode = GetNodeInfo(endNode).PreviousNode;
-                path = endNode.Value.ToString() + " -> " + path;
+                path.AddFirst(endNode.Value);
             }
 
             return path;

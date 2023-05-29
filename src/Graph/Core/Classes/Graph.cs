@@ -81,7 +81,7 @@ namespace FreeTeam.Graph
 
             for (int i = 0; i < Count; i++)
             {
-                vertexString.Append(vertices[i].ToString());
+                vertexString.Append(vertices[i]);
                 if (i < Count - 1)
                     vertexString.Append("\n");
             }
