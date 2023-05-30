@@ -53,7 +53,7 @@ namespace FreeTeam.Graph.Search
                     if (edge.ConnectedNode.Value.Equals(finish))
                     {
                         pathNodes.Add(edge.ConnectedNode, currentNode);
-                        path = ConvertToPath(edge.ConnectedNode, pathNodes).ToArray();
+                        path = GetPath(edge.ConnectedNode, pathNodes).ToArray();
 
                         return true;
                     }
@@ -97,7 +97,7 @@ namespace FreeTeam.Graph.Search
         #endregion
 
         #region Private methods
-        private IEnumerable<T> ConvertToPath(Vertex<T> endNode, Dictionary<Vertex<T>, Vertex<T>> pathNodes)
+        private IEnumerable<T> GetPath(Vertex<T> endNode, Dictionary<Vertex<T>, Vertex<T>> pathNodes)
         {
             LinkedList<T> path = new();
             path.AddFirst(endNode.Value);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace FreeTeam.Graph.Search
 {
@@ -17,11 +18,19 @@ namespace FreeTeam.Graph.Search
         public string FindShortestPath(T startValue, T finishValue) =>
             FindShortestPath(_graph.Find(startValue), _graph.Find(finishValue));
 
-        public string FindShortestPath(Vertex<T> startNode, Vertex<T> finishNode)
+        public string FindShortestPath(Vertex<T> startVertex, Vertex<T> finishVertex)
+        {
+            if (FindShortestPath(startVertex, finishVertex, out var path))
+                return string.Join(" -> ", path);
+
+            return "Path not found!";
+        }
+
+        public bool FindShortestPath(Vertex<T> startVertex, Vertex<T> finishVertex, out T[] path)
         {
             InitInfo();
 
-            var first = GetNodeInfo(startNode);
+            var first = GetNodeInfo(startVertex);
             first.EdgesWeightSum = 0;
 
             while (true)
@@ -33,7 +42,9 @@ namespace FreeTeam.Graph.Search
                 SetSumToNextNode(current);
             }
 
-            return string.Join(" -> ", GetPath(startNode, finishNode));
+            path = GetPath(startVertex, finishVertex).ToArray();
+
+            return path.Last().Equals(finishVertex.Value);
         }
 
         public GraphVertexInfo<T> FindUnvisitedNodeWithMinSum()
@@ -89,14 +100,14 @@ namespace FreeTeam.Graph.Search
             }
         }
 
-        private IEnumerable<T> GetPath(Vertex<T> startNode, Vertex<T> endNode)
+        private IEnumerable<T> GetPath(Vertex<T> startVertex, Vertex<T> endVertex)
         {
             var path = new LinkedList<T>();
-            path.AddFirst(endNode.Value);
-            while (startNode != endNode)
+            path.AddFirst(endVertex.Value);
+            while (startVertex != endVertex)
             {
-                endNode = GetNodeInfo(endNode).PreviousNode;
-                path.AddFirst(endNode.Value);
+                endVertex = GetNodeInfo(endVertex).PreviousNode;
+                path.AddFirst(endVertex.Value);
             }
 
             return path;

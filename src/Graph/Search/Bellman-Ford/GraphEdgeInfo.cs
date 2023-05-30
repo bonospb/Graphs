@@ -1,5 +1,4 @@
-﻿using Mono.Cecil.Cil;
-using System;
+﻿using System;
 
 namespace FreeTeam.Graph.Search
 {
@@ -18,12 +17,13 @@ namespace FreeTeam.Graph.Search
             Weight = weight;
         }
 
+        #region Public methods
         public bool Equals(GraphEdgeInfo<T> obj)
         {
-            if (obj is null) 
+            if (obj is null)
                 return false;
 
-            if (Object.ReferenceEquals(this, obj)) 
+            if (Object.ReferenceEquals(this, obj))
                 return true;
 
             return ((Source.Value.Equals(obj.Destination.Value)
@@ -44,5 +44,6 @@ namespace FreeTeam.Graph.Search
 
             return hashSourceValue ^ hashDestinationValue ^ hashProductCode;
         }
+        #endregion
     }
 }

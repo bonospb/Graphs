@@ -16,7 +16,18 @@ namespace FreeTeam.Graph.Search
             _graph = graph;
 
         #region Public methods
-        public void BellmanFord(T start, T finish)
+        public string FindShortestPath(T startValue, T finishValue) =>
+            FindShortestPath(_graph.Find(startValue), _graph.Find(finishValue));
+
+        public string FindShortestPath(Vertex<T> startVertex, Vertex<T> finishVertex)
+        {
+            if (FindShortestPath(startVertex.Value, finishVertex.Value, out var path))
+                return string.Join(" -> ", path);
+
+            return "Path not found!";
+        }
+
+        public bool FindShortestPath(T startValue, T finishValue, out T[] path)
         {
             var edges = _graph.Vertices
                 .SelectMany(x => x.Edges.Select(y => new GraphEdgeInfo<T>(x, y.ConnectedNode, y.Weight)))
@@ -35,7 +46,7 @@ namespace FreeTeam.Graph.Search
                 parent.Add(vertex.Value, default);
             }
 
-            distance[start] = 0;
+            distance[startValue] = 0;
 
             for (int i = 1; i < verticesCount; ++i)
             {
@@ -53,7 +64,9 @@ namespace FreeTeam.Graph.Search
                     Debug.Log($"Graph contains negative weight cycle! Edge: {edge.Source.Value} <-> {edge.Destination.Value}, Weight: ({edge.Weight})");
             }
 
-            PrintPath(start, finish, distance, parent);
+            path = GetPath(startValue, finishValue, parent).ToArray();
+
+            return path.Last().Equals(finishValue);
         }
         #endregion
 
@@ -67,15 +80,17 @@ namespace FreeTeam.Graph.Search
             }
         }
 
-        private void PrintPath(T u, T v, Dictionary<T, int> distance, Dictionary<T, T> parent)
+        private IEnumerable<T> GetPath(T u, T v, Dictionary<T, T> parent)
         {
-            if (v.Equals(default) || u.Equals(default))
-                return;
+            LinkedList<T> path = new();
+            path.AddFirst(v);
+            while (!v.Equals(u))
+            {
+                v = parent[v];
+                path.AddFirst(v);
+            }
 
-            if (!v.Equals(u))
-                PrintPath(u, parent[v], distance, parent);
-
-            Debug.Log($"Vertex {v} weight: {distance[v]}");
+            return path;
         }
         #endregion
     }
