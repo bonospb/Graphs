@@ -21,13 +21,13 @@ namespace FreeTeam.Graph.Search
 
         public string FindShortestPath(Vertex<T> startVertex, Vertex<T> finishVertex)
         {
-            if (FindShortestPath(startVertex.Value, finishVertex.Value, out var path))
+            if (FindShortestPath(startVertex, finishVertex, out var path))
                 return string.Join(" -> ", path);
 
             return "Path not found!";
         }
 
-        public bool FindShortestPath(T startValue, T finishValue, out T[] path)
+        public bool FindShortestPath(Vertex<T> startValue, Vertex<T> finishValue, out T[] path)
         {
             var edges = _graph.Vertices
                 .SelectMany(x => x.Edges.Select(y => new GraphEdgeInfo<T>(x, y.ConnectedNode, y.Weight)))
@@ -37,13 +37,13 @@ namespace FreeTeam.Graph.Search
             int verticesCount = _graph.Count;
             int edgesCount = edges.Count();
 
-            Dictionary<T, int> distance = new(verticesCount);
-            Dictionary<T, T> parent = new(verticesCount);
+            Dictionary<Vertex<T>, int> distance = new(verticesCount);
+            Dictionary<Vertex<T>, Vertex<T>> parent = new(verticesCount);
 
             foreach (var vertex in _graph.Vertices)
             {
-                distance.Add(vertex.Value, int.MaxValue);
-                parent.Add(vertex.Value, default);
+                distance.Add(vertex, int.MaxValue);
+                parent.Add(vertex, null);
             }
 
             distance[startValue] = 0;
@@ -51,14 +51,14 @@ namespace FreeTeam.Graph.Search
             for (int i = 1; i < verticesCount; ++i)
             {
                 foreach (var edge in edges)
-                    Relax(edge.Source.Value, edge.Destination.Value, edge.Weight, distance, parent);
+                    Relax(edge.Source, edge.Destination, edge.Weight, distance, parent);
             }
 
             foreach (var edge in edges)
             {
-                T u = edge.Source.Value;
-                T v = edge.Destination.Value;
-                int weight = edge.Weight;
+                var u = edge.Source;
+                var v = edge.Destination;
+                var weight = edge.Weight;
 
                 if (distance[u] != int.MaxValue && distance[u] + weight < distance[v])
                     Debug.Log($"Graph contains negative weight cycle! Edge: {edge.Source.Value} <-> {edge.Destination.Value}, Weight: ({edge.Weight})");
@@ -66,12 +66,12 @@ namespace FreeTeam.Graph.Search
 
             path = GetPath(startValue, finishValue, parent).ToArray();
 
-            return path.Last().Equals(finishValue);
+            return path.Last().Equals(finishValue.Value);
         }
         #endregion
 
         #region Private methods
-        private void Relax(T u, T v, int weight, Dictionary<T, int> distance, Dictionary<T, T> parent)
+        private void Relax(Vertex<T> u, Vertex<T> v, int weight, Dictionary<Vertex<T>, int> distance, Dictionary<Vertex<T>, Vertex<T>> parent)
         {
             if (distance[u] != int.MaxValue && distance[v] > distance[u] + weight)
             {
@@ -80,14 +80,14 @@ namespace FreeTeam.Graph.Search
             }
         }
 
-        private IEnumerable<T> GetPath(T u, T v, Dictionary<T, T> parent)
+        private IEnumerable<T> GetPath(Vertex<T> u, Vertex<T> v, Dictionary<Vertex<T>, Vertex<T>> parent)
         {
             LinkedList<T> path = new();
-            path.AddFirst(v);
+            path.AddFirst(v.Value);
             while (!v.Equals(u))
             {
                 v = parent[v];
-                path.AddFirst(v);
+                path.AddFirst(v.Value);
             }
 
             return path;
