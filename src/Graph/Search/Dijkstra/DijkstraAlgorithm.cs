@@ -44,7 +44,7 @@ namespace FreeTeam.Graph.Search
 
             path = GetPath(startVertex, finishVertex).ToArray();
 
-            return path.Last().Equals(finishVertex.Value);
+            return path.First().Equals(startVertex.Value) && path.Last().Equals(finishVertex.Value);
         }
 
         public GraphVertexInfo<T> FindUnvisitedNodeWithMinSum()
@@ -104,9 +104,12 @@ namespace FreeTeam.Graph.Search
         {
             var path = new LinkedList<T>();
             path.AddFirst(endVertex.Value);
-            while (startVertex != endVertex)
+            while (true)
             {
                 endVertex = GetNodeInfo(endVertex).PreviousNode;
+                if (startVertex == endVertex || endVertex == null)
+                    break;
+
                 path.AddFirst(endVertex.Value);
             }
 

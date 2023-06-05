@@ -27,7 +27,7 @@ namespace FreeTeam.Graph.Search
             return "Path not found!";
         }
 
-        public bool FindShortestPath(Vertex<T> startValue, Vertex<T> finishValue, out T[] path)
+        public bool FindShortestPath(Vertex<T> startVertex, Vertex<T> finishVertex, out T[] path)
         {
             var edges = _graph.Vertices
                 .SelectMany(x => x.Edges.Select(y => new GraphEdgeInfo<T>(x, y.ConnectedNode, y.Weight)))
@@ -46,7 +46,7 @@ namespace FreeTeam.Graph.Search
                 parent.Add(vertex, null);
             }
 
-            distance[startValue] = 0;
+            distance[startVertex] = 0;
 
             for (int i = 1; i < verticesCount; ++i)
             {
@@ -64,9 +64,9 @@ namespace FreeTeam.Graph.Search
                     Debug.Log($"Graph contains negative weight cycle! Edge: {edge.Source.Value} <-> {edge.Destination.Value}, Weight: ({edge.Weight})");
             }
 
-            path = GetPath(startValue, finishValue, parent).ToArray();
+            path = GetPath(startVertex, finishVertex, parent).ToArray();
 
-            return path.Last().Equals(finishValue.Value);
+            return path.First().Equals(startVertex.Value) && path.Last().Equals(finishVertex.Value);
         }
         #endregion
 
@@ -84,9 +84,12 @@ namespace FreeTeam.Graph.Search
         {
             LinkedList<T> path = new();
             path.AddFirst(v.Value);
-            while (!v.Equals(u))
+            while (true)
             {
                 v = parent[v];
+                if (u.Equals(v) || v == null) 
+                    break;
+
                 path.AddFirst(v.Value);
             }
 
