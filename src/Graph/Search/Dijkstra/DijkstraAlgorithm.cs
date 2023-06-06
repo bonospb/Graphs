@@ -104,10 +104,10 @@ namespace FreeTeam.Graph.Search
         {
             var path = new LinkedList<T>();
             path.AddFirst(endVertex.Value);
-            while (true)
+            while (startVertex != endVertex)
             {
                 endVertex = GetNodeInfo(endVertex).PreviousNode;
-                if (startVertex == endVertex || endVertex == null)
+                if (endVertex == null)
                     break;
 
                 path.AddFirst(endVertex.Value);

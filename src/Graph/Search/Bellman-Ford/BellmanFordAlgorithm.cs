@@ -80,17 +80,17 @@ namespace FreeTeam.Graph.Search
             }
         }
 
-        private IEnumerable<T> GetPath(Vertex<T> u, Vertex<T> v, Dictionary<Vertex<T>, Vertex<T>> parent)
+        private IEnumerable<T> GetPath(Vertex<T> startVertex, Vertex<T> finishVertex, Dictionary<Vertex<T>, Vertex<T>> parent)
         {
             LinkedList<T> path = new();
-            path.AddFirst(v.Value);
-            while (true)
+            path.AddFirst(finishVertex.Value);
+            while (startVertex != finishVertex)
             {
-                v = parent[v];
-                if (u.Equals(v) || v == null) 
+                finishVertex = parent[finishVertex];
+                if (finishVertex == null) 
                     break;
 
-                path.AddFirst(v.Value);
+                path.AddFirst(finishVertex.Value);
             }
 
             return path;
