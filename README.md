@@ -59,10 +59,19 @@ graph.AddEdges("Vertex 1", neighbors);
 
 # Поиск пути
 
-## Без учета веса ребра
+## Без учета веса ребра (поиск в глубину/ширину)
+Для изменения типа поиска пользуемся перечислением `GraphSearchTypes`.
+Так же можно указать множество вершин для исключения из списка для обхода.
 ```c#
 // 
-var path = new SearchAlgorithm<string>(skillModel.Graph).Search("Vertex 0", "Vertex 4", GraphSearchTypes.BFS);
+var path = new SearchAlgorithm<string>(skillModel.Graph)
+					.Search("Vertex 0", "Vertex 4", GraphSearchTypes.BFS);
+Debug.Log($"Path \n\t* Path: {path}");
+
+string[] excludeVertices = { "v1", "v2" };
+path = new SearchAlgorithm<string>(skillModel.Graph)
+					.Search("Vertex 0", "Vertex 4", GraphSearchTypes.BFS, excludeVertices);
+Debug.Log($"Path \n\t* Path: {path}");
 ```
 
 ## По алгоритму Дейкстры
