@@ -10,8 +10,8 @@
 	* [Добавление ребер](#Добавление-ребер)
 * [Поиск пути](#Поиск-пути)
 	* [Без учета веса ребра](#Без-учета-веса-ребра-поиск-в-глубинуширину)
-	* [Алгоритм Дейкстры](#Поиск-по-алгоритму-Дейкстры)
-	* [Алгоритм Беллмана — Форда](#Поиск-по-Алгоритму-Беллмана-—-Форда)
+	* [Алгоритм Дейкстры](#По-алгоритму-Дейкстры)
+	* [Алгоритм Беллмана — Форда](#По-алгоритму-Беллмана-—-Форда)
 
 # Установка
 
@@ -64,22 +64,24 @@ graph.AddEdges("Vertex 1", neighbors);
 Так же можно указать множество вершин для исключения из списка для обхода.
 ```c#
 // 
-var path = new SearchAlgorithm<string>(skillModel.Graph)
-					.Search("Vertex 0", "Vertex 4", GraphSearchTypes.BFS);
-Debug.Log($"Path \n\t* Path: {path}");
+var path = new SearchAlgorithm<string>(skillModel.Graph).Search("Vertex 0", "Vertex 4", GraphSearchTypes.DFS);
+Debug.Log($"Depth-first search \n\t* Path: {path}");
 
 string[] excludeVertices = { "v1", "v2" };
-path = new SearchAlgorithm<string>(skillModel.Graph)
-					.Search("Vertex 0", "Vertex 4", GraphSearchTypes.BFS, excludeVertices);
-Debug.Log($"Path \n\t* Path: {path}");
+path = new SearchAlgorithm<string>(skillModel.Graph).Search("Vertex 0", "Vertex 4", GraphSearchTypes.BFS, excludeVertices);
+Debug.Log($"Breadth-first search \n\t* Path: {path}");
 ```
 
 ## По алгоритму Дейкстры
 > **ВАЖНО!** Использование отрицательных весов ребер приведет к рекурсии в алгоритме со всеми вытекающими.
 ```c#
+var path = new DijkstraAlgorithm<string>(skillModel.Graph).FindShortestPath("skill_base", "skill_07");
+Debug.Log($"Dijkstra \n\t* Path: {path}");
 ```
  
 ## По алгоритму Беллмана — Форда
 ```c#
+var path = new BellmanFordAlgorithm<string>(skillModel.Graph).FindShortestPath("skill_base", "skill_07");
+Debug.Log($"BellmanFord \n\t* Path: {path}");
 ```
 
